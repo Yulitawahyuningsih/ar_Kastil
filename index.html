@@ -1,4 +1,3 @@
-```
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,7 +61,7 @@
     <a-marker preset="hiro" id="marker-utama" smooth="true" smoothCount="25" smoothTolerance="0.005" smoothThreshold="8">
       <a-entity
         id="model-kastil"
-        gltf-model="yulita.glb"
+        gltf-model="projek-ar-kastil-fantasi3.glb"
         scale="0.05 0.05 0.05"
         position="0 0 0"
         rotation="0 0 0">
@@ -84,12 +83,12 @@
     const status = document.getElementById('status');
 
     model.addEventListener('model-loaded', () => {
-      status.textContent = 'Model berhasil dimuat ✅';
+      status.textContent = 'Model berhasil dimuat';
       status.style.color = '#0f0';
     });
 
     model.addEventListener('model-error', (e) => {
-      status.textContent = 'Gagal memuat model ❌';
+      status.textContent = 'Gagal memuat model';
       status.style.color = 'red';
       console.error('Model error:', e.detail);
     });
