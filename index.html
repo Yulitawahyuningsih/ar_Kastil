@@ -55,13 +55,13 @@
 
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
     <a-assets>
-      <audio id="musik-bg" src="kastil.mp3" preload="auto"></audio>
+      <audio id="musik-bg" src="kastil.mp3" preload="auto" loop></audio>
     </a-assets>
 
     <a-marker preset="hiro" id="marker-utama" smooth="true" smoothCount="25" smoothTolerance="0.005" smoothThreshold="8">
 
       <!-- Parent entity untuk rotasi sudut pandang -->
-      <a-entity rotation="-75 0 0">
+      <a-entity rotation="-90 0 0">
         <a-entity
           id="model-kastil"
           gltf-model="projek-ar-kastil-fantasi3.glb"
@@ -87,6 +87,23 @@
     const model = document.querySelector('#model-kastil');
     const status = document.getElementById('status');
 
+    let audioSiap = false;
+    let markerAktif = false;
+
+    // Buka kunci audio lewat sentuhan pertama
+    function bukaAudio() {
+      if (audioSiap) return;
+      musik.play().then(() => {
+        musik.pause();
+        musik.currentTime = 0;
+        audioSiap = true;
+        if (markerAktif) musik.play().catch(() => {});
+      }).catch(() => {});
+    }
+
+    document.body.addEventListener('touchstart', bukaAudio, { once: true });
+    document.body.addEventListener('click', bukaAudio, { once: true });
+
     model.addEventListener('model-loaded', () => {
       status.textContent = 'Model berhasil dimuat';
       status.style.color = '#0f0';
@@ -99,11 +116,13 @@
     });
 
     marker.addEventListener('markerFound', () => {
+      markerAktif = true;
       musik.play().catch(() => {});
       marquee.style.display = 'block';
     });
 
     marker.addEventListener('markerLost', () => {
+      markerAktif = false;
       musik.pause();
       marquee.style.display = 'none';
     });
