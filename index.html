@@ -35,9 +35,23 @@
       0%   { transform: translateX(100vw); }
       100% { transform: translateX(-100%); }
     }
+    #status {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: #0f0;
+      font-family: monospace;
+      font-size: 13px;
+      padding: 6px 10px;
+      z-index: 9999;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body style="margin: 0; overflow: hidden;">
+
+  <div id="status">Memuat model...</div>
 
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: true;" vr-mode-ui="enabled: false">
     <a-assets>
@@ -45,8 +59,13 @@
     </a-assets>
 
     <a-marker preset="hiro" id="marker-utama" smooth="true" smoothCount="25" smoothTolerance="0.005" smoothThreshold="8">
-      <!-- TESTING: kotak merah sebagai pengganti sementara model kastil -->
-      <a-box position="0 0.5 0" material="color: red;" scale="1 1 1"></a-box>
+      <a-entity
+        id="model-kastil"
+        gltf-model="projek-ar-kastil-fantasi3.glb"
+        scale="0.05 0.05 0.05"
+        position="0 0 0"
+        rotation="0 0 0">
+      </a-entity>
     </a-marker>
 
     <a-entity camera></a-entity>
@@ -60,6 +79,19 @@
     const marker = document.querySelector('#marker-utama');
     const musik = document.querySelector('#musik-bg');
     const marquee = document.getElementById('marquee');
+    const model = document.querySelector('#model-kastil');
+    const status = document.getElementById('status');
+
+    model.addEventListener('model-loaded', () => {
+      status.textContent = 'Model berhasil dimuat ✅';
+      status.style.color = '#0f0';
+    });
+
+    model.addEventListener('model-error', (e) => {
+      status.textContent = 'Gagal memuat model ❌';
+      status.style.color = 'red';
+      console.error('Model error:', e.detail);
+    });
 
     marker.addEventListener('markerFound', () => {
       musik.play().catch(() => {});
